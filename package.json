@@ -1,7 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --tunnel",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "expo": "^33.0.0",
+    "expo-background-fetch": "^5.0.1",
+    "expo-task-manager": "^5.0.1",
+    "firebase": "^6.3.2",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-firebase": "^5.5.5",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.1"
   },
