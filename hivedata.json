@@ -1,0 +1,8 @@
+{
+    "hives": {  
+        "a1": {
+            "temperature": 0,
+            "weight": 0
+        }
+    }
+}
