@@ -17,24 +17,60 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hiveIds: [] };
+
+    this.addHive = this.addHive.bind(this);
+  }
+
+  componentDidMount() {
+    database
+      .ref('users/1/hiveIds')
+      .once('value')
+      .then((data) => {
+         // don't forget about toJSON (always important in web dev)
+        this.setState({hiveIds: Object.keys(data.toJSON())})
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  addHive() {
+    let newHiveKey = database.ref('users/1/hiveIds').push().key;
+    database.ref('users/1/hiveIds').child(newHiveKey).set('filler');
+    database.ref('hives').update({
+      [newHiveKey]: {
+        date_updated: 0,
+        time_updated: 0,
+        temp: 0,
+        humidity: 0, 
+        weight: 0,
+        userId: 1
+      }
+    })
+    let joined = this.state.hiveIds.concat(newHiveKey);
+    this.setState({ hiveIds: joined });
+  }
 
   render() {
     const { navigate } = this.props.navigation
-    // let hiveIds = []
-    // database
-    //   .ref('users/' + this.props.userId)
-    //   .on('child_added', (data) => {
-    //     hiveIds = data;
-    // })
-    console.log(hiveIds)
+    let hiveList = this.state.hiveIds.map((id) => 
+      <PersonalHive
+        hiveName = 'Cool Hive'
+        hiveId = {id}
+        key = {id}
+        navigate = {navigate}
+      />
+    )
     return (
       <View style={styles.container}>
         <Text>Your Hives </Text>
-        <PersonalHive
-          hiveName='Cool Hive'
-          hiveId = '-LkwlsGCeRtgzJ5NJnx6'
-          userId = {1}
-          navigate={navigate}
+        {hiveList}
+        <Button
+          title="Add a Hive"
+          onPress={this.addHive}
         />
       </View>
     )   
@@ -58,6 +94,8 @@ class PersonalHive extends React.Component {
           time_updated: data.time_updated,
           date_updated: data.date_updated 
         })
+      }, (error) => {
+        console.log(error)
       })
   }
   render() {
@@ -68,7 +106,7 @@ class PersonalHive extends React.Component {
         <Text> Time Updated: {this.state.time_updated} </Text>
         <Button
           title="Live Monitoring"
-          onPress={() => this.props.navigate('Hive', {name: this.props.hiveName, hiveId: this.props.hiveId, userId: this.props.userId})}
+          onPress={() => this.props.navigate('Hive', {name: this.props.hiveName, hiveId: this.props.hiveId})}
         />
 
       </View>
@@ -95,6 +133,8 @@ class HiveScreen extends React.Component {
           weight: data.weight,
           humidity: data.humidity
         })
+      }, (error) => {
+        console.log(error)
       })
   }
   render() {

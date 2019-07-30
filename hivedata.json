@@ -1,8 +1,28 @@
 {
     "hives": {  
-        "a1": {
-            "temperature": 0,
-            "weight": 0
+        "-LkwlsGCeRtgzJ5NJnx6": {
+            "date_updated": "Wednesday, July 23rd",
+            "humidity": 3,
+            "temp": 5,
+            "weight": 4,
+            "userId": 1,
+            "time_updated": "9:00 AM"
+        },
+        "-LkwlsizWK13QLsJvzWq" : {
+            "date_updated": "Tuesday, July 29th",
+            "humidity": 6,
+            "temp": 0,
+            "weight": 3,
+            "userId": 1,
+            "time_updated": "10:00 AM"
+        }
+    },
+    "users": {
+        "1": {
+            "hiveIds": {
+                "-LkwlsGCeRtgzJ5NJnx6": "filler",
+                "-LkwlsizWK13QLsJvzWq" : "filler" 
+            }
         }
     }
 }
