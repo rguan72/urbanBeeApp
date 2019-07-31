@@ -2,6 +2,7 @@
     "hives": {  
         "-LkwlsGCeRtgzJ5NJnx6": {
             "date_updated": "Wednesday, July 23rd",
+            "name": "Cool Hive",
             "humidity": 3,
             "temp": 5,
             "weight": 4,
@@ -9,7 +10,8 @@
             "time_updated": "9:00 AM"
         },
         "-LkwlsizWK13QLsJvzWq" : {
-            "date_updated": "Tuesday, July 29th",
+            "date_updated": "Monday, July 29th",
+            "name": "Richard's Hive",
             "humidity": 6,
             "temp": 0,
             "weight": 3,

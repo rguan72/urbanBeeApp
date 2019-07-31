@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { createStackNavigator, createAppContainer, NavigationEvents } from 'react-navigation';
 import * as firebase from 'firebase';
 
@@ -21,7 +21,7 @@ class HomeScreen extends React.Component {
     super(props);
     this.state = { hiveIds: [] };
 
-    this.addHive = this.addHive.bind(this);
+    this.addHive = this.addHive.bind(this); // More react bindings so you can have access to the class's 'this'
   }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ class HomeScreen extends React.Component {
       .ref('users/1/hiveIds')
       .once('value')
       .then((data) => {
-         // don't forget about toJSON (always important in web dev)
+        // don't forget about toJSON (always important in web dev)
         this.setState({hiveIds: Object.keys(data.toJSON())})
       })
       .catch((error) => {
@@ -47,7 +47,8 @@ class HomeScreen extends React.Component {
         temp: 0,
         humidity: 0, 
         weight: 0,
-        userId: 1
+        userId: 1,
+        name: 'New Hive',
       }
     })
     let joined = this.state.hiveIds.concat(newHiveKey);
@@ -66,12 +67,23 @@ class HomeScreen extends React.Component {
     )
     return (
       <View style={styles.container}>
-        <Text>Your Hives </Text>
-        {hiveList}
-        <Button
-          title="Add a Hive"
-          onPress={this.addHive}
-        />
+        <ScrollView>
+          <View>
+            <Image
+              source={require('./assets/top-bar.png')}
+              style={styles.topBar}
+            />
+          </View>
+          {hiveList}
+        </ScrollView>
+        <View style={[styles.alignEnd]}>
+          <TouchableOpacity onPress={this.addHive}>
+            <Image
+              source={require('./assets/add.png')}
+              style={[styles.marRight, styles.absolutePosition]}
+            /> 
+          </TouchableOpacity>
+        </View>
       </View>
     )   
   }
@@ -92,7 +104,8 @@ class PersonalHive extends React.Component {
         let data = snapshot.val()
         this.setState({ 
           time_updated: data.time_updated,
-          date_updated: data.date_updated 
+          date_updated: data.date_updated,
+          hiveName: data.name, 
         })
       }, (error) => {
         console.log(error)
@@ -100,15 +113,27 @@ class PersonalHive extends React.Component {
   }
   render() {
     return (
-      <View>
-        <Text> Hive {this.props.hiveName} </Text>
-        <Text> Date Updated: {this.state.date_updated} </Text>
-        <Text> Time Updated: {this.state.time_updated} </Text>
-        <Button
-          title="Live Monitoring"
-          onPress={() => this.props.navigate('Hive', {name: this.props.hiveName, hiveId: this.props.hiveId})}
-        />
-
+      <View style={styles.marAll}>
+        <Text style={[styles.orange, styles.header, styles.mar1]}> {this.state.hiveName} </Text>
+        <View style={styles.flexRow}>
+          <View>
+            <Image
+              source={require('./assets/beehivebee.png')}
+              style={styles.marRight}
+            />
+          </View>
+          <View style={[styles.marTop, styles.marRight]}>
+            <Text> Checked {this.state.date_updated} </Text>
+            <Text> at {this.state.time_updated} </Text>
+            <View style={[styles.marTop, styles.width100]}>
+              <Button
+                title="More"
+                color="#F7941D"
+                onPress={() => this.props.navigate('Hive', {hiveId: this.props.hiveId})}
+              />
+            </View>
+          </View>
+        </View>
       </View>
     )
   }
@@ -120,7 +145,8 @@ class HiveScreen extends React.Component {
     this.state = {
       temp: null,
       weight: null,
-      humidity: null
+      humidity: null,
+      name: null
     }
   }
   componentDidMount() {
@@ -131,7 +157,8 @@ class HiveScreen extends React.Component {
         this.setState({
           temp: data.temp,
           weight: data.weight,
-          humidity: data.humidity
+          humidity: data.humidity,
+          hiveName: data.name,
         })
       }, (error) => {
         console.log(error)
@@ -140,9 +167,18 @@ class HiveScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text> Hive {this.props.navigation.state.params.name} </Text>
+        <View>
+          <Image
+            source={require('./assets/top-bar.png')}
+            style={styles.topBar}
+          />
+        </View>
+        <Text style={styles.marAll}> {this.state.hiveName} </Text>
+        <View style={{justifyContent: 'center'}}>
+          <Text> Overall Hive Health </Text>
+        </View>
         <Text> Temperature: {this.state.temp} </Text>
-        <Text>Weight: {this.state.weight} </Text>
+        <Text> Weight: {this.state.weight} </Text>
         <Text> Humidity: {this.state.humidity} </Text> 
       </View>
     )
@@ -154,13 +190,59 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
+  flexRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start'
+  },
+  alignEnd: {
+    alignItems: 'flex-end'
+  },
+  absolutePosition: {
+    position: 'absolute'
+  },
+  width100: {
+    flexGrow: 0,
+    width: 100
+  },
+  topBar: {
+    width: 410,
+    height: 230,
+    marginBottom: 10
+  },
+  orange: {
+    color: '#F7941D',
+  },
+  orangeBackground: {
+    backgroundColor: '#F7941D',
+    zIndex: -99
+  },
+  header: {
+    fontSize: 25
+  },
+  mar1: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  marAll: {
+    marginLeft: 30,
+    marginRight: 30,
+    marginBottom: 30,
+    marginTop: 15,
+  },
+  marRight: {
+    marginRight: 25,
+  },
+  marTop: {
+    marginTop: 10,
+  }
 });
 
 
 const MainNavigator = createStackNavigator({
-  Home: {screen: HomeScreen},
+  Home: {screen: HomeScreen, navigationOptions: { header: null }},
   Hive: {screen: HiveScreen}
 })
 
