@@ -7,7 +7,11 @@
             "temp": 5,
             "weight": 4,
             "userId": 1,
-            "time_updated": "9:00 AM"
+            "time_updated": "9:00 AM",
+            "queen_present": true,
+            "varroa_mite": "low",
+            "swarm_risk": "low",
+            "overall_health": 98
         },
         "-LkwlsizWK13QLsJvzWq" : {
             "date_updated": "Monday, July 29th",
@@ -16,7 +20,11 @@
             "temp": 0,
             "weight": 3,
             "userId": 1,
-            "time_updated": "10:00 AM"
+            "time_updated": "10:00 AM",
+            "queen_present": true,
+            "varroa_mite": "medium",
+            "swarm_risk": "low",
+            "overall_health": 80
         }
     },
     "users": {

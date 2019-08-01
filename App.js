@@ -1,17 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ImageBackground, ScrollView, TouchableOpacity, ProgressBarAndroid } from 'react-native';
 import { createStackNavigator, createAppContainer, NavigationEvents } from 'react-navigation';
 import * as firebase from 'firebase';
+import * as firebaseConfig from './firebase-config.json';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCwKCQcyndHIGF1x0MRLiQLfHkRXUjUGgM",
-  authDomain: "urbanbee-8b6d6.firebaseapp.com",
-  databaseURL: "https://urbanbee-8b6d6.firebaseio.com",
-  projectId: "urbanbee-8b6d6",
-  storageBucket: "urbanbee-8b6d6.appspot.com",
-  messagingSenderId: "721840806856",
-  appId: "1:721840806856:web:0451e68d6d5d3b6f"
-};
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
@@ -146,7 +138,9 @@ class HiveScreen extends React.Component {
       temp: null,
       weight: null,
       humidity: null,
-      name: null
+      name: null,
+      date_updated: null,
+      time_updated: null
     }
   }
   componentDidMount() {
@@ -159,27 +153,53 @@ class HiveScreen extends React.Component {
           weight: data.weight,
           humidity: data.humidity,
           hiveName: data.name,
+          swarm_risk: data.swarm_risk,
+          varroa_mite: data.varroa_mite,
+          queen_present: data.queen_present,
+          date_updated: data.date_updated,
+          time_updated: data.time_updated,
+          overall_health: data.overall_health,
         })
       }, (error) => {
         console.log(error)
       })
   }
+  // Watch out for PROP NAMES (will fail silently)
   render() {
     return (
       <View>
         <View>
           <Image
             source={require('./assets/top-bar.png')}
-            style={styles.topBar}
+            style={[styles.topBar, styles.height200]}
           />
         </View>
-        <Text style={styles.marAll}> {this.state.hiveName} </Text>
-        <View style={{justifyContent: 'center'}}>
-          <Text> Overall Hive Health </Text>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={[styles.marTop, styles.orange, styles.header]}> Yo {this.state.hiveName} </Text>
         </View>
-        <Text> Temperature: {this.state.temp} </Text>
-        <Text> Weight: {this.state.weight} </Text>
-        <Text> Humidity: {this.state.humidity} </Text> 
+        <View style={{justifyContent: 'center', alignItems: 'center', color: 'orange'}}>
+          <Text style={[styles.marTop, styles.orange, styles.marBot]}> Overall Hive Health </Text>
+          <ImageBackground source={require('./assets/hexagon.png')} style={{width: 150, height: 130, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={[styles.green, styles.header2]}> {this.state.overall_health}% </Text>
+          </ImageBackground>
+          <View style={[styles.orangeBackground, styles.roundedRectangle, styles.marTop, styles.center, styles.white]}>
+            <Text style={styles.white}> Next checkup: </Text>
+            <Text style={styles.white}> {this.state.date_updated} </Text>
+            <Text style={styles.white}> {this.state.time_updated} </Text>
+          </View>
+        </View>
+        <View style={[styles.flexRow, styles.marAll, styles.large]}>
+          <View style={styles.flexCol}>
+            <Text> Temperature: {this.state.temp} </Text>
+            <Text> Weight: {this.state.weight} </Text>
+            <Text> Humidity: {this.state.humidity} </Text>
+          </View>
+          <View style={styles.flexCol}>
+            <Text> Swarm Risk: {this.state.swarm_risk} </Text>
+            <Text> Varroa Mite Threat: {this.state.varroa_mite} </Text>
+            <Text> Queen Bee Present: {this.state.queen_present} </Text> 
+          </View>
+        </View>
       </View>
     )
   }
@@ -197,6 +217,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start'
   },
+  flexCol: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   alignEnd: {
     alignItems: 'flex-end'
   },
@@ -207,6 +235,9 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     width: 100
   },
+  height200: {
+    height: 200
+  },
   topBar: {
     width: 410,
     height: 230,
@@ -215,12 +246,27 @@ const styles = StyleSheet.create({
   orange: {
     color: '#F7941D',
   },
+  green: {
+    color: '#08CC53'
+  },
+  white: {
+    color: '#FFFFFF'
+  },
   orangeBackground: {
     backgroundColor: '#F7941D',
-    zIndex: -99
+  },
+  roundedRectangle: {
+    borderRadius: 5,
+    padding: 10
+  },
+  large: {
+    fontSize: 18,
   },
   header: {
     fontSize: 25
+  },
+  header2: {
+    fontSize: 28
   },
   mar1: {
     marginTop: 10,
@@ -237,7 +283,10 @@ const styles = StyleSheet.create({
   },
   marTop: {
     marginTop: 10,
-  }
+  },
+  marBot: {
+    marginBottom: 10
+  },
 });
 
 
