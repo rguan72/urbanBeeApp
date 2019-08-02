@@ -189,15 +189,19 @@ class HiveScreen extends React.Component {
           </View>
         </View>
         <View style={[styles.flexRow, styles.marAll, styles.large]}>
-          <View style={styles.flexCol}>
-            <Text> Temperature: {this.state.temp} </Text>
-            <Text> Weight: {this.state.weight} </Text>
-            <Text> Humidity: {this.state.humidity} </Text>
+          <View style={[styles.flexCol, styles.centerText]}>
+            <Text opacity={.5}> Temperature </Text>
+            <Text style={[styles.header, styles.marBot]}> {this.state.temp} </Text>
+            <Text opacity={.5}> Weight </Text>
+            <Text style={[styles.header, styles.marBot]}> {this.state.weight} </Text>
+            <Text opacity={.5}> Humidity </Text>
+            <Text style={[styles.header, styles.marBot]}> {this.state.humidity} </Text>
           </View>
-          <View style={styles.flexCol}>
-            <Text> Swarm Risk: {this.state.swarm_risk} </Text>
-            <Text> Varroa Mite Threat: {this.state.varroa_mite} </Text>
-            <Text> Queen Bee Present: {this.state.queen_present} </Text> 
+          <View style={[styles.flexCol, styles.centerText]}>
+            <Text opacity={.5}> Swarm Risk </Text>
+            <Text style={[styles.header, styles.marBot]}> {this.state.swarm_risk} </Text>
+            <Text opacity={.5}> Varroa Mite Threat </Text>
+            <Text style={[styles.header, styles.marBot]}> {this.state.varroa_mite} </Text>
           </View>
         </View>
       </View>
@@ -259,6 +263,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10
   },
+  med: {
+    fontSize: 14
+  },
   large: {
     fontSize: 18,
   },
@@ -286,6 +293,9 @@ const styles = StyleSheet.create({
   },
   marBot: {
     marginBottom: 10
+  },
+  centerText: {
+    textAlign: 'center'
   },
 });
 
